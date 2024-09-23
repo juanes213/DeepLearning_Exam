@@ -385,7 +385,16 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#approach">Approach</a></li>
 </ul>
 </li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#molecules">Molecules</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#smiles-simplified-molecular-input-line-entry-system">SMILES (Simplified Molecular Input Line Entry System)</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-smiles">What is SMILES?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#smiles">SMILES</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#molecules">Molecules</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#more-in-depth-visualization-for-first-molecule">More in depth visualization for first molecule</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#d-first-molecule">3D First Molecule</a></li>
+</ul>
+</li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#modelo">Modelo</a></li>
 </ul>
 
@@ -456,8 +465,8 @@ document.write(`
 </li>
 <li><p><strong>Model Development</strong>:</p>
 <ul class="simple">
-<li><p>Begin with baseline models (e.g., logistic regression, random forests) to establish a performance benchmark.</p></li>
-<li><p>Progress to more advanced models like neural networks (CNNs, RNNs), graph neural networks, or transformer-based architectures tailored for SMILES data.</p></li>
+<li><p>Begin with baseline models (e.g., XGBoost, random forests) to establish a performance benchmark.</p></li>
+<li><p>Progress to more advanced models like neural networks, or transformer-based architectures tailored for SMILES data.</p></li>
 </ul>
 </li>
 <li><p><strong>Handling Imbalanced Data</strong>:</p>
@@ -482,6 +491,7 @@ document.write(`
 <span class="kn">from</span> <span class="nn">rdkit</span> <span class="kn">import</span> <span class="n">Chem</span>
 <span class="kn">from</span> <span class="nn">rdkit.Chem</span> <span class="kn">import</span> <span class="n">Draw</span>
 <span class="kn">from</span> <span class="nn">rdkit.Chem</span> <span class="kn">import</span> <span class="n">Descriptors</span>
+<span class="kn">from</span> <span class="nn">rdkit</span> <span class="kn">import</span> <span class="n">RDLogger</span>
 <span class="kn">import</span> <span class="nn">io</span>
 <span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
 <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span>
@@ -524,6 +534,22 @@ document.write(`
 </div>
 </div>
 </div>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="smiles-simplified-molecular-input-line-entry-system">
+<h1>SMILES (Simplified Molecular Input Line Entry System)<a class="headerlink" href="#smiles-simplified-molecular-input-line-entry-system" title="Link to this heading">#</a></h1>
+<section id="what-is-smiles">
+<h2>What is SMILES?<a class="headerlink" href="#what-is-smiles" title="Link to this heading">#</a></h2>
+<p>“SMILES (Simplified Molecular Input Line Entry System) is a chemical notation that allows a user to represent a chemical structure in a way that can be used by the computer. SMILES is an easily learned and flexible notation. The SMILES notation requires that you learn a handful of rules. You do not need to worry about ambiguous representations because the software will automatically reorder your entry into a unique SMILES string when necessary.”</p>
+</section>
+<section id="smiles">
+<h2>SMILES<a class="headerlink" href="#smiles" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>buildingblock1_smiles - The structure, in SMILES, of the first building block</p></li>
+<li><p>buildingblock2_smiles - The structure, in SMILES, of the second building block</p></li>
+<li><p>buildingblock3_smiles - The structure, in SMILES, of the third building block</p></li>
+<li><p>molecule_smiles - The structure of the fully assembled molecule, in SMILES. This includes the three building blocks and the triazine core. Note we use a [Dy] as the stand-in for the DNA linker.</p></li>
+</ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Overview of data types and basic information</span>
@@ -648,6 +674,7 @@ max    2.952442e+08       1.000000
 <img alt="_images/1b1ec9cc3ce9112817590b974f14b8afd7eec5a3e119a3e06730a4d0e8ffcb91.png" src="_images/1b1ec9cc3ce9112817590b974f14b8afd7eec5a3e119a3e06730a4d0e8ffcb91.png" />
 </div>
 </div>
+<p>The distribution is heavily skewed towards the value 0, indicating a significant class imbalance. This means that the majority of samples belong to the class 0, while the class 1 is underrepresented. The class imbalance may pose challenges for modeling, as the model might be biased towards the dominant class. To address this issue, techniques like oversampling, undersampling, or class weighting can be employed.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT * FROM train_sample&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">df</span><span class="p">()</span>
@@ -665,6 +692,11 @@ max    2.952442e+08       1.000000
 <img alt="_images/08fa1c469273557002a298f02fae604fb18b4fc95112673a5bfb6dccc22357d5.png" src="_images/08fa1c469273557002a298f02fae604fb18b4fc95112673a5bfb6dccc22357d5.png" />
 </div>
 </div>
+<ul class="simple">
+<li><p>BRD4 and HSA: These two protein targets have approximately the same number of occurrences, with counts around 35,000.</p></li>
+<li><p>SEH: This protein target has a slightly lower count compared to BRD4 and HSA, falling somewhere between 30,000 and 35,000.</p></li>
+</ul>
+<p>Overall, the graph indicates a relatively balanced distribution among the three protein targets, with no significant dominance of any particular protein. This suggests that the dataset contains a diverse representation of these targets.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;num_atoms&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;molecule_smiles&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">Chem</span><span class="o">.</span><span class="n">MolFromSmiles</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">GetNumAtoms</span><span class="p">())</span>
@@ -681,6 +713,13 @@ max    2.952442e+08       1.000000
 <img alt="_images/57bee587307442b9a8bf83ea6ead3a1612c942003d204534f7a4ae3821f278ca.png" src="_images/57bee587307442b9a8bf83ea6ead3a1612c942003d204534f7a4ae3821f278ca.png" />
 </div>
 </div>
+<ul class="simple">
+<li><p>Distribution shape: The distribution is approximately bell-shaped, suggesting that the majority of molecules have a similar number of atoms, with fewer molecules having significantly fewer or more atoms.</p></li>
+<li><p>Peak: The peak of the distribution is located around 40-45 atoms, indicating that this is the most common range of atom numbers among the molecules in the dataset.</p></li>
+<li><p>Skewness: The distribution is slightly skewed to the right, with a longer tail extending towards higher numbers of atoms. This indicates that there are some molecules with a larger number of atoms compared to the majority.</p></li>
+<li><p>Range: The range of atom numbers is approximately from 25 to 65, suggesting that the molecules in the dataset vary in size from relatively small to moderately large.</p></li>
+</ul>
+<p>Overall, the histogram provides valuable insights into the complexity of the molecules in the dataset. The majority of molecules have a moderate number of atoms, with a smaller proportion having fewer or more atoms. The slight rightward skew indicates the presence of some larger molecules.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
@@ -696,6 +735,12 @@ max    2.952442e+08       1.000000
 <img alt="_images/633c637f6cc1a3662cfb4d57458155ebd4c26852b996b85772da6681d06a251d.png" src="_images/633c637f6cc1a3662cfb4d57458155ebd4c26852b996b85772da6681d06a251d.png" />
 </div>
 </div>
+<ul class="simple">
+<li><p>Median: The median number of atoms for molecules that bind is slightly higher than the median for non-binding molecules. This suggests that, on average, molecules that bind tend to have a slightly larger number of atoms.</p></li>
+<li><p>Interquartile range (IQR): The IQR, which represents the spread of the middle 50% of the data, appears to be similar for both groups. This indicates that the variability in the number of atoms within each binding group is comparable.</p></li>
+<li><p>Outliers: There are a few outliers present in both groups, represented by the individual dots outside the whiskers. These outliers suggest that there are some molecules with significantly fewer or more atoms compared to the majority within their respective binding groups.</p></li>
+</ul>
+<p>Overall, the box plot suggests a slight difference in the distribution of molecule complexity between binding and non-binding molecules. While the median number of atoms is slightly higher for binding molecules, the overall variability within each group is similar. The presence of outliers indicates that there are some exceptions to this general trend.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;mol_weight&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;molecule_smiles&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">Descriptors</span><span class="o">.</span><span class="n">ExactMolWt</span><span class="p">(</span><span class="n">Chem</span><span class="o">.</span><span class="n">MolFromSmiles</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
@@ -712,6 +757,13 @@ max    2.952442e+08       1.000000
 <img alt="_images/1a7785302da3eba738a4f13c87b8e8f9809f1102a026d407203e3c6ed7b01f65.png" src="_images/1a7785302da3eba738a4f13c87b8e8f9809f1102a026d407203e3c6ed7b01f65.png" />
 </div>
 </div>
+<ul class="simple">
+<li><p>Distribution shape: The distribution is approximately bell-shaped, suggesting that the majority of molecules have a similar molecular weight, with fewer molecules having significantly lower or higher molecular weights.</p></li>
+<li><p>Peak: The peak of the distribution is located around 750-800, indicating that this is the most common range of molecular weights among the molecules in the dataset.</p></li>
+<li><p>Skewness: The distribution is slightly skewed to the right, with a longer tail extending towards higher molecular weights. This indicates that there are some molecules with a larger molecular weight compared to the majority.</p></li>
+<li><p>Range: The range of molecular weights appears to be approximately from 500 to 1300, suggesting that the molecules in the dataset vary in size from relatively small to moderately large.</p></li>
+</ul>
+<p>Overall, the histogram provides valuable insights into the molecular weights of the molecules in the dataset. The majority of molecules have a moderate molecular weight, with a smaller proportion having lower or higher molecular weights. The slight rightward skew indicates the presence of some larger molecules.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span>
@@ -731,6 +783,13 @@ max    2.952442e+08       1.000000
 <img alt="_images/5f73b232979cdf32cd182d0807cfcde41374fad901dd71bb47261d50f9fc97cf.png" src="_images/5f73b232979cdf32cd182d0807cfcde41374fad901dd71bb47261d50f9fc97cf.png" />
 </div>
 </div>
+<ul class="simple">
+<li><p>Multimodal distributions: All three distributions exhibit multiple peaks and valleys, suggesting that there are several distinct groups of building blocks with different numbers of atoms.
+Peak locations: The most prominent peaks for building block 1 are around 27.5, 30, and 32.5 atoms; for building block 2, they are around 0-2.5, 7.5-10, and 12.5-15 atoms; and for building block 3, they are around 0-2.5, 10, and 12.5 atoms.</p></li>
+<li><p>Skewness: All three distributions are skewed to the right, with longer tails extending towards higher numbers of atoms. This indicates that there are some building blocks with a larger number of atoms compared to the majority.</p></li>
+<li><p>Range: The range of atom numbers is similar for all three building blocks, approximately from 0 to 20.</p></li>
+</ul>
+<p>Overall: The analysis suggests that while all three building blocks exhibit similar patterns of complexity, there are notable differences in the specific ranges of atom numbers that are most common. Building block 1 has a higher tendency to have larger numbers of atoms, while building block 2 and 3 have a more concentrated distribution around lower atom numbers. The rightward skew in all three distributions indicates the presence of some larger building blocks.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">binding_rate</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;protein_name&#39;</span><span class="p">)[</span><span class="s1">&#39;binds&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
@@ -747,6 +806,12 @@ max    2.952442e+08       1.000000
 <img alt="_images/1893c8c6ee89baf7a062635c5f41ac9539c618664907cb83a7134e1b4def85f0.png" src="_images/1893c8c6ee89baf7a062635c5f41ac9539c618664907cb83a7134e1b4def85f0.png" />
 </div>
 </div>
+<ul class="simple">
+<li><p>Highest binding rate: SEH has the highest binding rate among the three targets.</p></li>
+<li><p>Lowest binding rate: BRD4 has the lowest binding rate.</p></li>
+<li><p>Intermediate binding rate: HSA has an intermediate binding rate, falling between BRD4 and SEH.</p></li>
+</ul>
+<p>Overall, the plot indicates that the binding rates for the three protein targets vary significantly. SEH exhibits the highest binding rate, while BRD4 exhibits the lowest. HSA’s binding rate is positioned between the two extremes.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">smiles_query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -777,6 +842,34 @@ max    2.952442e+08       1.000000
 <img alt="_images/a6937d02ebf5b9aab5a5a2c518ce966731294c57f0c1d98011c40d2f940abaf9.png" src="_images/a6937d02ebf5b9aab5a5a2c518ce966731294c57f0c1d98011c40d2f940abaf9.png" />
 </div>
 </div>
+<p><strong>Building Block 1:</strong></p>
+<ul class="simple">
+<li><p>The distribution is unimodal, with a single peak around 60-70.</p></li>
+<li><p>The majority of SMILES strings for Building Block 1 have a length between 50 and 80.</p></li>
+<li><p>There are fewer strings with lengths below 50 or above 80.</p></li>
+</ul>
+<p><strong>Building Block 2:</strong></p>
+<ul class="simple">
+<li><p>The distribution is also unimodal, with a peak around 20-30.</p></li>
+<li><p>The majority of SMILES strings for Building Block 2 have a length between 10 and 40.</p></li>
+<li><p>There are fewer strings with lengths below 10 or above 40.</p></li>
+</ul>
+<p><strong>Building Block 3:</strong></p>
+<ul class="simple">
+<li><p>The distribution is unimodal, with a peak around 20-30.</p></li>
+<li><p>The majority of SMILES strings for Building Block 3 have a length between 10 and 40.</p></li>
+<li><p>There are fewer strings with lengths below 10 or above 40.</p></li>
+</ul>
+<p><strong>Molecule:</strong></p>
+<ul class="simple">
+<li><p>The distribution is unimodal, with a peak around 80-90.</p></li>
+<li><p>The majority of SMILES strings for the entire molecule have a length between 60 and 110.</p></li>
+<li><p>There are fewer strings with lengths below 60 or above 110.</p></li>
+</ul>
+<p><strong>Overall analysis:</strong></p>
+<p>The SMILES strings for Building Block 1 tend to be longer than those for Building Block 2 and 3.
+The SMILES strings for Building Block 2 and 3 have similar length distributions, with a majority of strings falling within the 10-40 range.
+The length distribution of the entire molecule is influenced by the combined lengths of its individual building blocks. The peak for the molecule’s distribution is located at a higher value compared to the individual building blocks, reflecting the cumulative effect of their lengths.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
@@ -793,9 +886,8 @@ max    2.952442e+08       1.000000
 </div>
 </div>
 </section>
-</section>
 <section id="molecules">
-<h1>Molecules<a class="headerlink" href="#molecules" title="Link to this heading">#</a></h1>
+<h2>Molecules<a class="headerlink" href="#molecules" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">visualize_and_save_molecules</span><span class="p">(</span><span class="n">smiles_list</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
@@ -829,6 +921,12 @@ max    2.952442e+08       1.000000
 </div>
 </div>
 </div>
+<ul class="simple">
+<li><p><strong>Size and complexity:</strong> The molecules vary in size and complexity. Some molecules have relatively simple structures with fewer atoms and bonds, while others have more complex structures with numerous atoms and bonds.</p></li>
+<li><p><strong>Rings:</strong> Several of the molecules contain rings of atoms, which are common structural features in organic compounds.</p></li>
+<li><p><strong>Functional groups:</strong> Different colored circles and symbols may represent various functional groups, such as hydroxyl groups (-OH), carbonyl groups (C=O), and amine groups (-NH2). These functional groups often determine the chemical properties and reactivity of a molecule.</p></li>
+<li><p><strong>Stereochemistry:</strong> The spatial arrangement of atoms in a molecule can be important for its biological activity and properties. The image does not explicitly show stereochemistry, but it is possible that certain molecules have chiral centers, which can lead to different stereoisomers.</p></li>
+</ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">binding_mols</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;binds&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">][</span><span class="s1">&#39;molecule_smiles&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
@@ -844,6 +942,12 @@ max    2.952442e+08       1.000000
 </div>
 </div>
 </div>
+<ul class="simple">
+<li><p>**Size and complexity:**The molecules vary in size and complexity. Some molecules have relatively simple structures with fewer atoms and bonds, while others have more complex structures with numerous atoms and bonds.</p></li>
+<li><p><strong>Rings:</strong> Several of the molecules contain rings of atoms, which are common structural features in organic compounds.</p></li>
+<li><p><strong>Functional groups:</strong> Different colored circles and symbols may represent various functional groups, such as hydroxyl groups (-OH), carbonyl groups (C=O), and amine groups (-NH2). These functional groups often determine the chemical properties and reactivity of a molecule.</p></li>
+<li><p><strong>Stereochemistry:</strong> The spatial arrangement of atoms in a molecule can be important for its biological activity and properties. The image does not explicitly show stereochemistry, but it is possible that certain molecules have chiral centers, which can lead to different stereoisomers.</p></li>
+</ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">non_binding_mols</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;binds&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">][</span><span class="s1">&#39;molecule_smiles&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
@@ -859,6 +963,12 @@ max    2.952442e+08       1.000000
 </div>
 </div>
 </div>
+<ul class="simple">
+<li><p>Size and complexity: The molecules vary in size and complexity. Some molecules have relatively simple structures with fewer atoms and bonds, while others have more complex structures with numerous atoms and bonds.</p></li>
+<li><p>Rings: Several of the molecules contain rings of atoms, which are common structural features in organic compounds.</p></li>
+<li><p>Functional groups: Different colored circles and symbols may represent various functional groups, such as hydroxyl groups (-OH), carbonyl groups (C=O), and amine groups (-NH2). These functional groups often determine the chemical properties and reactivity of a molecule.</p></li>
+<li><p>Stereochemistry: The spatial arrangement of atoms in a molecule can be important for its biological activity and properties. The image does not explicitly show stereochemistry, but it is possible that certain molecules have chiral centers, which can lead to different stereoisomers.</p></li>
+</ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;mol_weight&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;molecule_smiles&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">Descriptors</span><span class="o">.</span><span class="n">ExactMolWt</span><span class="p">(</span><span class="n">Chem</span><span class="o">.</span><span class="n">MolFromSmiles</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
@@ -875,6 +985,12 @@ max    2.952442e+08       1.000000
 </div>
 </div>
 </div>
+<ul class="simple">
+<li><p><strong>Size and complexity:</strong> The molecules appear to be relatively large and complex, as suggested by their labeling as “High MW” (high molecular weight). They contain numerous atoms and bonds, with intricate structures involving multiple rings and functional groups.</p></li>
+<li><p><strong>Rings:</strong> Several of the molecules contain rings of atoms, including aromatic rings (represented by hexagons) and non-aromatic rings.</p></li>
+<li><p><strong>Functional groups:</strong> The molecules display a variety of functional groups, such as hydroxyl groups (-OH), carbonyl groups (C=O), amine groups (-NH2), and halogen atoms (Cl, Br). These functional groups can influence the chemical properties and reactivity of the molecules.</p></li>
+<li><p><strong>Stereochemistry:</strong> While the image does not explicitly show stereochemistry, it is possible that some of these molecules contain chiral centers, which can lead to different stereoisomers.</p></li>
+</ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">low_weight_mols</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">nsmallest</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="s1">&#39;mol_weight&#39;</span><span class="p">)[</span><span class="s1">&#39;molecule_smiles&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
@@ -890,6 +1006,171 @@ max    2.952442e+08       1.000000
 </div>
 </div>
 </div>
+<ul class="simple">
+<li><p><strong>Size and complexity:</strong> The molecules appear to be relatively small and less complex. They have fewer atoms and bonds, with simpler structural arrangements.</p></li>
+<li><p><strong>Rings:</strong> Some of the molecules contain rings of atoms, including aromatic rings (represented by hexagons).</p></li>
+<li><p><strong>Functional groups:</strong> The molecules display a variety of functional groups, such as hydroxyl groups (-OH), carbonyl groups (C=O), amine groups (-NH2), and halogen atoms (Cl, Br). These functional groups can influence the chemical properties and reactivity of the molecules.</p></li>
+<li><p><strong>Stereochemistry:</strong> While the image does not explicitly show stereochemistry, it is possible that some of these molecules contain chiral centers, which can lead to different stereoisomers.</p></li>
+</ul>
+<section id="more-in-depth-visualization-for-first-molecule">
+<h3>More in depth visualization for first molecule<a class="headerlink" href="#more-in-depth-visualization-for-first-molecule" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train_path</span> <span class="o">=</span> <span class="s1">&#39;train.parquet/train.parquet&#39;</span>
+<span class="n">test_path</span> <span class="o">=</span> <span class="s1">&#39;test.parquet/test.parquet&#39;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">con</span> <span class="o">=</span> <span class="n">duckdb</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;(SELECT *</span>
+<span class="s2">                        FROM parquet_scan(&#39;</span><span class="si">{</span><span class="n">train_path</span><span class="si">}</span><span class="s2">&#39;)</span>
+<span class="s2">                        WHERE binds = 0</span>
+<span class="s2">                        ORDER BY random()</span>
+<span class="s2">                        LIMIT 90000)</span>
+<span class="s2">                        UNION ALL</span>
+<span class="s2">                        (SELECT *</span>
+<span class="s2">                        FROM parquet_scan(&#39;</span><span class="si">{</span><span class="n">train_path</span><span class="si">}</span><span class="s2">&#39;)</span>
+<span class="s2">                        WHERE binds = 1</span>
+<span class="s2">                        ORDER BY random()</span>
+<span class="s2">                        LIMIT 90000)&quot;&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">df</span><span class="p">()</span>
+
+<span class="n">con</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "21b83afbff31457b8117466d8d2e5d11", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">first_smiles</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;molecule_smiles&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">first_molecule</span> <span class="o">=</span> <span class="n">Chem</span><span class="o">.</span><span class="n">MolFromSmiles</span><span class="p">(</span><span class="n">first_smiles</span><span class="p">)</span>
+<span class="n">Draw</span><span class="o">.</span><span class="n">MolToImage</span><span class="p">(</span><span class="n">first_molecule</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">700</span><span class="p">,</span> <span class="mi">700</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/8b0a4f1de287b8410d478d2424610d8eb0bc31aa2228a7e3b680caea474b626e.png" src="_images/8b0a4f1de287b8410d478d2424610d8eb0bc31aa2228a7e3b680caea474b626e.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">first_smiles</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;buildingblock1_smiles&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">first_molecule</span> <span class="o">=</span> <span class="n">Chem</span><span class="o">.</span><span class="n">MolFromSmiles</span><span class="p">(</span><span class="n">first_smiles</span><span class="p">)</span>
+<span class="n">Draw</span><span class="o">.</span><span class="n">MolToImage</span><span class="p">(</span><span class="n">first_molecule</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">700</span><span class="p">,</span> <span class="mi">700</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/ecc9ae32cb10478311ed78efc3b03ac7c40cc30359a651fe9aa2d3027f101cf2.png" src="_images/ecc9ae32cb10478311ed78efc3b03ac7c40cc30359a651fe9aa2d3027f101cf2.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">first_smiles</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;buildingblock2_smiles&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">first_molecule</span> <span class="o">=</span> <span class="n">Chem</span><span class="o">.</span><span class="n">MolFromSmiles</span><span class="p">(</span><span class="n">first_smiles</span><span class="p">)</span>
+<span class="n">Draw</span><span class="o">.</span><span class="n">MolToImage</span><span class="p">(</span><span class="n">first_molecule</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">700</span><span class="p">,</span> <span class="mi">700</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/92dfe23f0f69c45d4155c24a3cbbf352d826d59e91fb92c18279098df6138464.png" src="_images/92dfe23f0f69c45d4155c24a3cbbf352d826d59e91fb92c18279098df6138464.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">first_smiles</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;buildingblock3_smiles&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">first_molecule</span> <span class="o">=</span> <span class="n">Chem</span><span class="o">.</span><span class="n">MolFromSmiles</span><span class="p">(</span><span class="n">first_smiles</span><span class="p">)</span>
+<span class="n">Draw</span><span class="o">.</span><span class="n">MolToImage</span><span class="p">(</span><span class="n">first_molecule</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">700</span><span class="p">,</span> <span class="mi">700</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/b9638021b6dfca89d7d85717ec0bb2981f2978a7bd44006d612eff4a04f6589f.png" src="_images/b9638021b6dfca89d7d85717ec0bb2981f2978a7bd44006d612eff4a04f6589f.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="d-first-molecule">
+<h2>3D First Molecule<a class="headerlink" href="#d-first-molecule" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">py3Dmol</span>
+<span class="kn">from</span> <span class="nn">rdkit.Chem</span> <span class="kn">import</span> <span class="n">AllChem</span>
+
+<span class="n">first_molecule_smiles</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;molecule_smiles&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">first_molecule</span> <span class="o">=</span> <span class="n">Chem</span><span class="o">.</span><span class="n">MolFromSmiles</span><span class="p">(</span><span class="n">first_molecule_smiles</span><span class="p">)</span>
+
+<span class="n">first_molecule</span> <span class="o">=</span> <span class="n">Chem</span><span class="o">.</span><span class="n">AddHs</span><span class="p">(</span><span class="n">first_molecule</span><span class="p">)</span>
+<span class="n">AllChem</span><span class="o">.</span><span class="n">EmbedMolecule</span><span class="p">(</span><span class="n">first_molecule</span><span class="p">)</span>
+
+<span class="c1"># Visualize the molecule in 3D using Py3Dmol</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">py3Dmol</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
+<span class="n">pdb_block_molecule</span> <span class="o">=</span> <span class="n">Chem</span><span class="o">.</span><span class="n">MolToPDBBlock</span><span class="p">(</span><span class="n">first_molecule</span><span class="p">)</span>
+<span class="n">view</span><span class="o">.</span><span class="n">addModel</span><span class="p">(</span><span class="n">pdb_block_molecule</span><span class="p">,</span> <span class="s1">&#39;pdb&#39;</span><span class="p">)</span>
+<span class="n">view</span><span class="o">.</span><span class="n">setStyle</span><span class="p">({</span><span class="s1">&#39;stick&#39;</span><span class="p">:</span> <span class="p">{}})</span>
+<span class="n">view</span><span class="o">.</span><span class="n">zoomTo</span><span class="p">()</span>
+<span class="n">view</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[14:30:52] UFFTYPER: Unrecognized charge state for atom: 35
+[14:30:52] UFFTYPER: Unrecognized atom type: Dy5+3 (35)
+</pre></div>
+</div>
+<div class="output text_html"><div id="3dmolviewer_17271198522279897"  style="position: relative; width: 800px; height: 600px;">
+        <p id="3dmolwarning_17271198522279897" style="background-color:#ffcccc;color:black">3Dmol.js failed to load for some reason.  Please check your browser console for error messages.<br></p>
+        </div>
+<script>
+
+var loadScriptAsync = function(uri){
+  return new Promise((resolve, reject) => {
+    //this is to ignore the existence of requirejs amd
+    var savedexports, savedmodule;
+    if (typeof exports !== 'undefined') savedexports = exports;
+    else exports = {}
+    if (typeof module !== 'undefined') savedmodule = module;
+    else module = {}
+
+    var tag = document.createElement('script');
+    tag.src = uri;
+    tag.async = true;
+    tag.onload = () => {
+        exports = savedexports;
+        module = savedmodule;
+        resolve();
+    };
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+});
+};
+
+if(typeof $3Dmolpromise === 'undefined') {
+$3Dmolpromise = null;
+  $3Dmolpromise = loadScriptAsync('https://cdnjs.cloudflare.com/ajax/libs/3Dmol/2.4.0/3Dmol-min.js');
+}
+
+var viewer_17271198522279897 = null;
+var warn = document.getElementById("3dmolwarning_17271198522279897");
+if(warn) {
+    warn.parentNode.removeChild(warn);
+}
+$3Dmolpromise.then(function() {
+viewer_17271198522279897 = $3Dmol.createViewer(document.getElementById("3dmolviewer_17271198522279897"),{backgroundColor:"white"});
+viewer_17271198522279897.zoomTo();
+	viewer_17271198522279897.addModel("HETATM    1  C1  UNL     1      -0.621   7.967   0.585  1.00  0.00           C  \nHETATM    2  C2  UNL     1      -1.195   6.598   0.552  1.00  0.00           C  \nHETATM    3  C3  UNL     1      -0.347   5.536   0.351  1.00  0.00           C  \nHETATM    4  C4  UNL     1      -0.822   4.236   0.311  1.00  0.00           C  \nHETATM    5  N1  UNL     1      -0.017   3.100   0.109  1.00  0.00           N  \nHETATM    6  C5  UNL     1      -0.368   1.732   0.046  1.00  0.00           C  \nHETATM    7  N2  UNL     1      -1.580   1.222   0.169  1.00  0.00           N  \nHETATM    8  C6  UNL     1      -1.942  -0.060   0.114  1.00  0.00           C  \nHETATM    9  N3  UNL     1      -3.305  -0.414   0.271  1.00  0.00           N  \nHETATM   10  C7  UNL     1      -3.839  -1.722   0.238  1.00  0.00           C  \nHETATM   11  C8  UNL     1      -3.153  -2.889   0.059  1.00  0.00           C  \nHETATM   12  C9  UNL     1      -3.717  -4.141   0.034  1.00  0.00           C  \nHETATM   13  C10 UNL     1      -5.100  -4.277   0.201  1.00  0.00           C  \nHETATM   14  O1  UNL     1      -5.570  -5.573   0.160  1.00  0.00           O  \nHETATM   15  C11 UNL     1      -6.920  -5.938   0.305  1.00  0.00           C  \nHETATM   16  F1  UNL     1      -7.255  -6.593  -0.885  1.00  0.00           F  \nHETATM   17  F2  UNL     1      -7.095  -6.837   1.359  1.00  0.00           F  \nHETATM   18  C12 UNL     1      -5.822  -3.122   0.384  1.00  0.00           C  \nHETATM   19  C13 UNL     1      -5.204  -1.895   0.400  1.00  0.00           C  \nHETATM   20  N4  UNL     1      -0.896  -0.856  -0.094  1.00  0.00           N  \nHETATM   21  C14 UNL     1       0.378  -0.483  -0.237  1.00  0.00           C  \nHETATM   22  N5  UNL     1       1.401  -1.436  -0.459  1.00  0.00           N  \nHETATM   23  C15 UNL     1       2.773  -0.916  -0.584  1.00  0.00           C  \nHETATM   24  C16 UNL     1       3.632  -2.113  -0.869  1.00  0.00           C  \nHETATM   25  C17 UNL     1       5.055  -1.872  -1.036  1.00  0.00           C  \nHETATM   26  C18 UNL     1       6.027  -1.917  -0.033  1.00  0.00           C  \nHETATM   27  C19 UNL     1       7.356  -1.682  -0.213  1.00  0.00           C  \nHETATM   28  C20 UNL     1       7.814  -1.374  -1.456  1.00  0.00           C  \nHETATM   29  F3  UNL     1       9.134  -1.144  -1.617  1.00  0.00           F  \nHETATM   30  C21 UNL     1       6.905  -1.313  -2.495  1.00  0.00           C  \nHETATM   31  F4  UNL     1       7.415  -1.002  -3.714  1.00  0.00           F  \nHETATM   32  C22 UNL     1       5.547  -1.555  -2.301  1.00  0.00           C  \nHETATM   33  C23 UNL     1       3.244  -0.339   0.702  1.00  0.00           C  \nHETATM   34  O2  UNL     1       4.377   0.227   0.878  1.00  0.00           O  \nHETATM   35  N6  UNL     1       2.483  -0.348   1.901  1.00  0.00           N  \nHETATM   36 DY1  UNL     1       3.316   0.497   3.542  1.00  0.00          DY  \nHETATM   37  N7  UNL     1       0.591   0.819  -0.160  1.00  0.00           N  \nHETATM   38  C24 UNL     1      -2.184   4.151   0.489  1.00  0.00           C  \nHETATM   39  N8  UNL     1      -3.020   5.190   0.686  1.00  0.00           N  \nHETATM   40  C25 UNL     1      -2.554   6.464   0.726  1.00  0.00           C  \nHETATM   41 BR1  UNL     1      -3.712   7.950   1.004  1.00  0.00          BR  \nHETATM   42  H1  UNL     1       0.356   7.962   0.084  1.00  0.00           H  \nHETATM   43  H2  UNL     1      -1.285   8.579  -0.093  1.00  0.00           H  \nHETATM   44  H3  UNL     1      -0.617   8.412   1.604  1.00  0.00           H  \nHETATM   45  H4  UNL     1       0.721   5.705   0.220  1.00  0.00           H  \nHETATM   46  H5  UNL     1       1.008   3.350  -0.010  1.00  0.00           H  \nHETATM   47  H6  UNL     1      -3.982   0.371   0.426  1.00  0.00           H  \nHETATM   48  H7  UNL     1      -2.090  -2.846  -0.074  1.00  0.00           H  \nHETATM   49  H8  UNL     1      -3.087  -5.020  -0.116  1.00  0.00           H  \nHETATM   50  H9  UNL     1      -7.588  -5.093   0.462  1.00  0.00           H  \nHETATM   51  H10 UNL     1      -6.869  -3.215   0.511  1.00  0.00           H  \nHETATM   52  H11 UNL     1      -5.858  -1.033   0.552  1.00  0.00           H  \nHETATM   53  H12 UNL     1       1.148  -2.447  -0.524  1.00  0.00           H  \nHETATM   54  H13 UNL     1       2.754  -0.177  -1.382  1.00  0.00           H  \nHETATM   55  H14 UNL     1       3.267  -2.589  -1.825  1.00  0.00           H  \nHETATM   56  H15 UNL     1       3.464  -2.888  -0.096  1.00  0.00           H  \nHETATM   57  H16 UNL     1       5.690  -2.163   0.960  1.00  0.00           H  \nHETATM   58  H17 UNL     1       8.033  -1.745   0.649  1.00  0.00           H  \nHETATM   59  H18 UNL     1       4.914  -1.483  -3.174  1.00  0.00           H  \nHETATM   60  H19 UNL     1       1.538  -0.780   1.913  1.00  0.00           H  \nHETATM   61  H20 UNL     1      -2.731   3.224   0.488  1.00  0.00           H  \nCONECT    1    2   42   43   44\nCONECT    2    3    3   40\nCONECT    3    4   45\nCONECT    4    5   38   38\nCONECT    5    6   46\nCONECT    6    7    7   37\nCONECT    7    8\nCONECT    8    9   20   20\nCONECT    9   10   47\nCONECT   10   11   11   19\nCONECT   11   12   48\nCONECT   12   13   13   49\nCONECT   13   14   18\nCONECT   14   15\nCONECT   15   16   17   50\nCONECT   18   19   19   51\nCONECT   19   52\nCONECT   20   21\nCONECT   21   22   37   37\nCONECT   22   23   53\nCONECT   23   24   33   54\nCONECT   24   25   55   56\nCONECT   25   26   26   32\nCONECT   26   27   57\nCONECT   27   28   28   58\nCONECT   28   29   30\nCONECT   30   31   32   32\nCONECT   32   59\nCONECT   33   34   34   35\nCONECT   35   36   60\nCONECT   38   39   61\nCONECT   39   40   40\nCONECT   40   41\nEND\n","pdb");
+	viewer_17271198522279897.setStyle({"stick": {}});
+	viewer_17271198522279897.zoomTo();
+viewer_17271198522279897.render();
+});
+</script></div></div>
+</div>
+</section>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="modelo">
 <h1>Modelo<a class="headerlink" href="#modelo" title="Link to this heading">#</a></h1>
@@ -1214,114 +1495,19 @@ Test data size: 57000
 <img alt="_images/59e7f06803ad6cedea4201328820c27c3d73d86de78ea2c0cc8e9086e76c06c1.png" src="_images/59e7f06803ad6cedea4201328820c27c3d73d86de78ea2c0cc8e9086e76c06c1.png" />
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Train and evaluate XGBoost</span>
-<span class="n">xgb_model</span> <span class="o">=</span> <span class="n">XGBClassifier</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
-<span class="n">xgb_train_start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-<span class="n">xgb_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_np</span><span class="p">,</span> <span class="n">y_train_np</span><span class="p">)</span>
-<span class="n">xgb_train_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">xgb_train_start</span>
-
-<span class="n">xgb_predict_start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-<span class="n">xgb_pred</span> <span class="o">=</span> <span class="n">xgb_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test_np</span><span class="p">)</span>
-<span class="n">xgb_pred_proba</span> <span class="o">=</span> <span class="n">xgb_model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test_np</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span>
-<span class="n">xgb_predict_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">xgb_predict_start</span>
-
-<span class="n">xgb_metrics</span> <span class="o">=</span> <span class="n">evaluate_model</span><span class="p">(</span><span class="n">y_test_np</span><span class="p">,</span> <span class="n">xgb_pred</span><span class="p">,</span> <span class="n">xgb_pred_proba</span><span class="p">)</span>
-
-<span class="c1"># Train and evaluate LightGBM</span>
-<span class="n">lgbm_model</span> <span class="o">=</span> <span class="n">LGBMClassifier</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
-<span class="n">lgbm_train_start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-<span class="n">lgbm_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_np</span><span class="p">,</span> <span class="n">y_train_np</span><span class="p">)</span>
-<span class="n">lgbm_train_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">lgbm_train_start</span>
-
-<span class="n">lgbm_predict_start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-<span class="n">lgbm_pred</span> <span class="o">=</span> <span class="n">lgbm_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test_np</span><span class="p">)</span>
-<span class="n">lgbm_pred_proba</span> <span class="o">=</span> <span class="n">lgbm_model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test_np</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span>
-<span class="n">lgbm_predict_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">lgbm_predict_start</span>
-
-<span class="n">lgbm_metrics</span> <span class="o">=</span> <span class="n">evaluate_model</span><span class="p">(</span><span class="n">y_test_np</span><span class="p">,</span> <span class="n">lgbm_pred</span><span class="p">,</span> <span class="n">lgbm_pred_proba</span><span class="p">)</span>
-
-<span class="c1"># Train and evaluate Random Forest</span>
-<span class="n">rf_model</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
-<span class="n">rf_train_start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-<span class="n">rf_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_np</span><span class="p">,</span> <span class="n">y_train_np</span><span class="p">)</span>
-<span class="n">rf_train_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">rf_train_start</span>
-
-<span class="n">rf_predict_start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-<span class="n">rf_pred</span> <span class="o">=</span> <span class="n">rf_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test_np</span><span class="p">)</span>
-<span class="n">rf_pred_proba</span> <span class="o">=</span> <span class="n">rf_model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test_np</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span>
-<span class="n">rf_predict_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">rf_predict_start</span>
-
-<span class="n">rf_metrics</span> <span class="o">=</span> <span class="n">evaluate_model</span><span class="p">(</span><span class="n">y_test_np</span><span class="p">,</span> <span class="n">rf_pred</span><span class="p">,</span> <span class="n">rf_pred_proba</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ---- Visualización de resultados ----</span>
-<span class="n">models</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;XGBoost&#39;</span><span class="p">,</span> <span class="s1">&#39;LightGBM&#39;</span><span class="p">,</span> <span class="s1">&#39;Random Forest&#39;</span><span class="p">]</span>
-<span class="n">metrics</span> <span class="o">=</span> <span class="p">[</span><span class="n">xgb_metrics</span><span class="p">,</span> <span class="n">lgbm_metrics</span><span class="p">,</span> <span class="n">rf_metrics</span><span class="p">]</span>
-<span class="n">train_times</span> <span class="o">=</span> <span class="p">[</span><span class="n">xgb_train_time</span><span class="p">,</span> <span class="n">lgbm_train_time</span><span class="p">,</span> <span class="n">rf_train_time</span><span class="p">]</span>
-<span class="n">predict_times</span> <span class="o">=</span> <span class="p">[</span><span class="n">xgb_predict_time</span><span class="p">,</span> <span class="n">lgbm_predict_time</span><span class="p">,</span> <span class="n">rf_predict_time</span><span class="p">]</span>
-
-<span class="c1"># Crear subplots para Confusion Matrix y ROC Curve</span>
-<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">))</span>
-
-<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">model_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">models</span><span class="p">):</span>
-    <span class="c1"># Confusion Matrix</span>
-    <span class="n">cm</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_test_np</span><span class="p">,</span> <span class="p">[</span><span class="n">xgb_pred</span><span class="p">,</span> <span class="n">lgbm_pred</span><span class="p">,</span> <span class="n">rf_pred</span><span class="p">][</span><span class="n">i</span><span class="p">])</span>
-    <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">cm</span><span class="p">,</span> <span class="n">annot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Blues&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
-    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Confusion Matrix for </span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;True Label&#39;</span><span class="p">)</span>
-    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Predicted Label&#39;</span><span class="p">)</span>
-
-    <span class="c1"># ROC Curve</span>
-    <span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">roc_curve</span><span class="p">(</span><span class="n">y_test_np</span><span class="p">,</span> <span class="p">[</span><span class="n">xgb_pred_proba</span><span class="p">,</span> <span class="n">lgbm_pred_proba</span><span class="p">,</span> <span class="n">rf_pred_proba</span><span class="p">][</span><span class="n">i</span><span class="p">])</span>
-    <span class="n">roc_auc</span> <span class="o">=</span> <span class="n">auc</span><span class="p">(</span><span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">)</span>
-    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;ROC curve (area = </span><span class="si">{</span><span class="n">roc_auc</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
-    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;k--&#39;</span><span class="p">)</span>
-    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
-    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">])</span>
-    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;False Positive Rate&#39;</span><span class="p">)</span>
-    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;True Positive Rate&#39;</span><span class="p">)</span>
-    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;ROC Curve for </span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;lower right&quot;</span><span class="p">)</span>
-
-<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-
-<span class="c1"># ---- Resultados ----</span>
-<span class="n">results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-    <span class="s1">&#39;Model&#39;</span><span class="p">:</span> <span class="n">models</span><span class="p">,</span>
-    <span class="s1">&#39;Accuracy&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">m</span><span class="p">[</span><span class="s1">&#39;accuracy&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">metrics</span><span class="p">],</span>
-    <span class="s1">&#39;Precision&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">m</span><span class="p">[</span><span class="s1">&#39;precision&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">metrics</span><span class="p">],</span>
-    <span class="s1">&#39;Recall&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">m</span><span class="p">[</span><span class="s1">&#39;recall&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">metrics</span><span class="p">],</span>
-    <span class="s1">&#39;F1-score&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">m</span><span class="p">[</span><span class="s1">&#39;f1&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">metrics</span><span class="p">],</span>
-    <span class="s1">&#39;AUC&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">m</span><span class="p">[</span><span class="s1">&#39;auc&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">metrics</span><span class="p">],</span>
-    <span class="s1">&#39;Train Time&#39;</span><span class="p">:</span> <span class="n">train_times</span><span class="p">,</span>
-    <span class="s1">&#39;Predict Time&#39;</span><span class="p">:</span> <span class="n">predict_times</span>
-<span class="p">})</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Prepare data for visualization</span>
-<span class="n">models</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;MLP&#39;</span><span class="p">,</span> <span class="s1">&#39;XGBoost&#39;</span><span class="p">,</span> <span class="s1">&#39;LightGBM&#39;</span><span class="p">,</span> <span class="s1">&#39;Random Forest&#39;</span><span class="p">]</span>
-<span class="n">metrics</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;accuracy&#39;</span><span class="p">,</span> <span class="s1">&#39;precision&#39;</span><span class="p">,</span> <span class="s1">&#39;recall&#39;</span><span class="p">,</span> <span class="s1">&#39;f1&#39;</span><span class="p">,</span> <span class="s1">&#39;auc&#39;</span><span class="p">]</span>
-<span class="n">results</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
-    <span class="p">[</span><span class="n">mlp_metrics</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">metrics</span><span class="p">],</span>
-    <span class="p">[</span><span class="n">xgb_metrics</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">metrics</span><span class="p">],</span>
-    <span class="p">[</span><span class="n">lgbm_metrics</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">metrics</span><span class="p">],</span>
-    <span class="p">[</span><span class="n">rf_metrics</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">metrics</span><span class="p">]</span>
-<span class="p">])</span>
-</pre></div>
-</div>
-</div>
-</div>
+<p><strong>Random Forest:</strong>
+Has a relatively high number of true positives and true negatives.
+Shows a moderate number of false positives and false negatives.</p>
+<p><strong>XGBoost:</strong>
+Exhibits a similar pattern to Random Forest, with slightly higher true positives and lower false negatives.</p>
+<p><strong>LightGBM:</strong>
+Demonstrates the highest number of true positives and the lowest number of false negatives among the three models.</p>
+<p><em><strong>From the ROC curves, we can infer:</strong></em></p>
+<ul class="simple">
+<li><p>XGBoost: Has the highest AUC, suggesting the best overall performance in terms of sensitivity and specificity.</p></li>
+<li><p>LightGBM: Shows a slightly lower AUC than XGBoost but still outperforms Random Forest.</p></li>
+<li><p>Random Forest: Has the lowest AUC among the three models.</p></li>
+</ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create bar plot for performance metrics</span>
@@ -1351,280 +1537,7 @@ Test data size: 57000
 <img alt="_images/0a5c8e2017b07c8a44c142eb752903a50a2b69d9de3ec51481dcf05f2fd774a1.png" src="_images/0a5c8e2017b07c8a44c142eb752903a50a2b69d9de3ec51481dcf05f2fd774a1.png" />
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train_times</span> <span class="o">=</span> <span class="p">[</span><span class="n">mlp_train_time</span><span class="p">,</span> <span class="n">xgb_train_time</span><span class="p">,</span> <span class="n">lgbm_train_time</span><span class="p">,</span> <span class="n">rf_train_time</span><span class="p">]</span>
-<span class="n">predict_times</span> <span class="o">=</span> <span class="p">[</span><span class="n">mlp_predict_time</span><span class="p">,</span> <span class="n">xgb_predict_time</span><span class="p">,</span> <span class="n">lgbm_predict_time</span><span class="p">,</span> <span class="n">rf_predict_time</span><span class="p">]</span>
-
-<span class="c1"># Create table for complexity metrics</span>
-<span class="n">complexity_data</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;Model&#39;</span><span class="p">:</span> <span class="n">models</span><span class="p">,</span>
-    <span class="s1">&#39;Training Time (s)&#39;</span><span class="p">:</span> <span class="n">train_times</span><span class="p">,</span>
-    <span class="s1">&#39;Prediction Time (s)&#39;</span><span class="p">:</span> <span class="n">predict_times</span><span class="p">,</span>
-<span class="p">}</span>
-
-<span class="c1"># Print complexity metrics table</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Model Complexity Metrics:&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:&lt;15}</span><span class="s2"> </span><span class="si">{:&lt;20}</span><span class="s2"> </span><span class="si">{:&lt;20}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;Model&#39;</span><span class="p">,</span> <span class="s1">&#39;Training Time (s)&#39;</span><span class="p">,</span> <span class="s1">&#39;Prediction Time (s)&#39;</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">model</span><span class="p">,</span> <span class="n">train_time</span><span class="p">,</span> <span class="n">pred_time</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">models</span><span class="p">,</span> <span class="n">train_times</span><span class="p">,</span> <span class="n">predict_times</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:&lt;15}</span><span class="s2"> </span><span class="si">{:&lt;20.4f}</span><span class="s2"> </span><span class="si">{:&lt;20.4f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">train_time</span><span class="p">,</span> <span class="n">pred_time</span><span class="p">))</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Model Complexity Metrics:
-Model           Training Time (s)    Prediction Time (s) 
-------------------------------------------------------------
-MLP             3.9731               0.0230              
-XGBoost         0.1635               0.0528              
-LightGBM        0.0473               0.1345              
-Random Forest   0.3665               1.5287              
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
-<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
-<span class="kn">import</span> <span class="nn">torch.optim</span> <span class="k">as</span> <span class="nn">optim</span>
-<span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">Dataset</span><span class="p">,</span> <span class="n">DataLoader</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
-<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">roc_auc_score</span>
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
-<span class="kn">from</span> <span class="nn">sklearn.utils.class_weight</span> <span class="kn">import</span> <span class="n">compute_class_weight</span>
-<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
-<span class="kn">import</span> <span class="nn">duckdb</span>
-<span class="kn">from</span> <span class="nn">rdkit</span> <span class="kn">import</span> <span class="n">Chem</span>
-<span class="kn">from</span> <span class="nn">rdkit.Chem</span> <span class="kn">import</span> <span class="n">AllChem</span>
-
-<span class="c1"># 1. Carga de datos con DuckDB</span>
-<span class="n">con</span> <span class="o">=</span> <span class="n">duckdb</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">database</span><span class="o">=</span><span class="s1">&#39;:memory:&#39;</span><span class="p">)</span>
-
-<span class="c1"># Cargar datos de train desde parquet</span>
-<span class="n">parquet_file_path_train</span> <span class="o">=</span> <span class="s1">&#39;train.parquet/train.parquet&#39;</span>
-<span class="n">sample_size_train</span> <span class="o">=</span> <span class="mi">200000</span>
-<span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;CREATE TABLE train_sample AS SELECT * FROM read_parquet(&#39;</span><span class="si">{</span><span class="n">parquet_file_path_train</span><span class="si">}</span><span class="s2">&#39;) USING SAMPLE </span><span class="si">{</span><span class="n">sample_size_train</span><span class="si">}</span><span class="s2"> ROWS&quot;</span><span class="p">)</span>
-<span class="n">df_train</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT * FROM train_sample&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">df</span><span class="p">()</span>
-
-<span class="c1"># Cargar datos de test desde parquet</span>
-<span class="n">parquet_file_path_test</span> <span class="o">=</span> <span class="s1">&#39;test.parquet/test.parquet&#39;</span>
-<span class="n">sample_size_test</span> <span class="o">=</span> <span class="mi">22000</span>
-<span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;CREATE TABLE test_sample AS SELECT * FROM read_parquet(&#39;</span><span class="si">{</span><span class="n">parquet_file_path_test</span><span class="si">}</span><span class="s2">&#39;) USING SAMPLE </span><span class="si">{</span><span class="n">sample_size_test</span><span class="si">}</span><span class="s2"> ROWS&quot;</span><span class="p">)</span>
-<span class="n">df_test</span> <span class="o">=</span> <span class="n">con</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT * FROM test_sample&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">df</span><span class="p">()</span>
-
-<span class="c1"># 2. Preprocesamiento de SMILES a fingerprints</span>
-<span class="c1"># Inicializar el generador de huellas de Morgan</span>
-<span class="n">morgan_gen</span> <span class="o">=</span> <span class="n">AllChem</span><span class="o">.</span><span class="n">GetMorganGenerator</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">fpSize</span><span class="o">=</span><span class="mi">2048</span><span class="p">)</span>
-
-<span class="k">def</span> <span class="nf">smiles_to_fingerprint</span><span class="p">(</span><span class="n">smiles</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">2048</span><span class="p">):</span>
-    <span class="n">mol</span> <span class="o">=</span> <span class="n">Chem</span><span class="o">.</span><span class="n">MolFromSmiles</span><span class="p">(</span><span class="n">smiles</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">mol</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">morgan_gen</span><span class="o">.</span><span class="n">GetFingerprint</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span><span class="o">.</span><span class="n">ToBitString</span><span class="p">())</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">size</span>  <span class="c1"># Retorna una lista de ceros si el SMILES es inválido</span>
-
-<span class="c1"># Convertir SMILES a fingerprints para el conjunto de train</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Convirtiendo SMILES de train a fingerprints...&quot;</span><span class="p">)</span>
-<span class="n">tqdm</span><span class="o">.</span><span class="n">pandas</span><span class="p">()</span>
-<span class="n">df_train</span><span class="p">[</span><span class="s1">&#39;fingerprint&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_train</span><span class="p">[</span><span class="s1">&#39;molecule_smiles&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">progress_apply</span><span class="p">(</span><span class="n">smiles_to_fingerprint</span><span class="p">)</span>
-
-<span class="c1"># Convertir las cadenas binarias a arreglos de enteros</span>
-<span class="n">df_train</span><span class="p">[</span><span class="s1">&#39;fingerprint&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_train</span><span class="p">[</span><span class="s1">&#39;fingerprint&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">bit</span><span class="p">)</span> <span class="k">for</span> <span class="n">bit</span> <span class="ow">in</span> <span class="n">x</span><span class="p">])</span>
-
-<span class="c1"># 3. División en train y validación</span>
-<span class="n">X_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">df_train</span><span class="p">[</span><span class="s1">&#39;fingerprint&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
-<span class="n">y_train</span> <span class="o">=</span> <span class="n">df_train</span><span class="p">[</span><span class="s1">&#39;binds&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-
-<span class="c1"># Dividir en train y validación</span>
-<span class="n">X_train</span><span class="p">,</span> <span class="n">X_val</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_val</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y_train</span><span class="p">)</span>
-
-<span class="c1"># Escalar las características</span>
-<span class="n">scaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
-<span class="n">X_train_scaled</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
-<span class="n">X_val_scaled</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_val</span><span class="p">)</span>
-
-<span class="c1"># Preprocesar el conjunto de test (sin la columna &#39;binds&#39;)</span>
-<span class="n">df_test</span><span class="p">[</span><span class="s1">&#39;fingerprint&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_test</span><span class="p">[</span><span class="s1">&#39;molecule_smiles&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">progress_apply</span><span class="p">(</span><span class="n">smiles_to_fingerprint</span><span class="p">)</span>
-<span class="n">df_test</span><span class="p">[</span><span class="s1">&#39;fingerprint&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_test</span><span class="p">[</span><span class="s1">&#39;fingerprint&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">bit</span><span class="p">)</span> <span class="k">for</span> <span class="n">bit</span> <span class="ow">in</span> <span class="n">x</span><span class="p">])</span>
-<span class="n">X_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">df_test</span><span class="p">[</span><span class="s1">&#39;fingerprint&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
-<span class="n">X_test_scaled</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-
-<span class="c1"># 4. Dataset personalizado</span>
-<span class="k">class</span> <span class="nc">ChemicalDataset</span><span class="p">(</span><span class="n">Dataset</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">FloatTensor</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">FloatTensor</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="kc">None</span>
-    
-    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
-    
-    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">X</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
-
-<span class="c1"># Crear datasets</span>
-<span class="n">train_dataset</span> <span class="o">=</span> <span class="n">ChemicalDataset</span><span class="p">(</span><span class="n">X_train_scaled</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-<span class="n">val_dataset</span> <span class="o">=</span> <span class="n">ChemicalDataset</span><span class="p">(</span><span class="n">X_val_scaled</span><span class="p">,</span> <span class="n">y_val</span><span class="p">)</span>
-<span class="n">test_dataset</span> <span class="o">=</span> <span class="n">ChemicalDataset</span><span class="p">(</span><span class="n">X_test_scaled</span><span class="p">)</span>
-
-<span class="c1"># Crear data loaders</span>
-<span class="n">train_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">train_dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">val_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">val_dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">test_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">test_dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-<span class="c1"># 5. MLP Model</span>
-<span class="k">class</span> <span class="nc">MLP</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_size</span><span class="p">,</span> <span class="n">weight_decay</span> <span class="o">=</span> <span class="mf">0.0001</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">MLP</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">layers</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
-            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">input_size</span><span class="p">,</span> <span class="mi">1024</span><span class="p">),</span>
-            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
-            <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="mf">0.2</span><span class="p">),</span>
-            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">512</span><span class="p">),</span>
-            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
-            <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="mf">0.2</span><span class="p">),</span>
-            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">256</span><span class="p">),</span>
-            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
-            <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="mf">0.2</span><span class="p">),</span>
-            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-        <span class="p">)</span>
-    
-    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-
-
-<span class="k">def</span> <span class="nf">calculate_roc_auc</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_predicted</span><span class="p">):</span>
-  <span class="k">return</span> <span class="n">roc_auc_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_predicted</span><span class="p">)</span>
-
-<span class="c1"># Inicializar el modelo</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">MLP</span><span class="p">(</span><span class="n">input_size</span><span class="o">=</span><span class="mi">2048</span><span class="p">,</span> <span class="n">weight_decay</span><span class="o">=</span><span class="mf">0.001</span><span class="p">)</span>
-
-<span class="c1"># 6. Entrenamiento</span>
-<span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
-
-<span class="c1"># Utilizar BCEWithLogitsLoss para mayor estabilidad numérica</span>
-<span class="n">criterion</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">BCEWithLogitsLoss</span><span class="p">()</span>
-
-<span class="c1"># Calcular pesos de clases para manejar el desbalance</span>
-<span class="n">class_weights</span> <span class="o">=</span> <span class="n">compute_class_weight</span><span class="p">(</span><span class="s1">&#39;balanced&#39;</span><span class="p">,</span> <span class="n">classes</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y_train</span><span class="p">),</span> <span class="n">y</span><span class="o">=</span><span class="n">y_train</span><span class="p">)</span>
-<span class="n">class_weights_tensor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">FloatTensor</span><span class="p">(</span><span class="n">class_weights</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
-
-<span class="c1"># Utilizar Adam optimizer</span>
-<span class="n">optimizer</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">)</span>
-
-<span class="n">num_epochs</span> <span class="o">=</span> <span class="mi">10</span>
-<span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Training on </span><span class="si">{</span><span class="n">device</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_epochs</span><span class="p">):</span>
-    <span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
-    <span class="n">train_loss</span> <span class="o">=</span> <span class="mf">0.0</span>
-    <span class="n">train_pbar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">train_loader</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Epoch </span><span class="si">{</span><span class="n">epoch</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">num_epochs</span><span class="si">}</span><span class="s2"> [Train]&quot;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">batch_X</span><span class="p">,</span> <span class="n">batch_y</span> <span class="ow">in</span> <span class="n">train_pbar</span><span class="p">:</span>
-        <span class="n">batch_X</span><span class="p">,</span> <span class="n">batch_y</span> <span class="o">=</span> <span class="n">batch_X</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">),</span> <span class="n">batch_y</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
-        
-        <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
-        <span class="n">outputs</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">batch_X</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
-        <span class="n">loss</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">batch_y</span><span class="p">)</span>
-        <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
-        <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
-        
-        <span class="n">train_loss</span> <span class="o">+=</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
-        <span class="n">train_pbar</span><span class="o">.</span><span class="n">set_postfix</span><span class="p">({</span><span class="s1">&#39;loss&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">train_loss</span><span class="o">/</span><span class="p">(</span><span class="n">train_pbar</span><span class="o">.</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">})</span>
-    
-    <span class="c1"># Validación</span>
-    <span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
-    <span class="n">correct</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">val_loss</span> <span class="o">=</span> <span class="mf">0.0</span>
-    <span class="n">val_pbar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">val_loader</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Epoch </span><span class="si">{</span><span class="n">epoch</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">num_epochs</span><span class="si">}</span><span class="s2"> [Val]&quot;</span><span class="p">)</span>
-    <span class="n">y_true</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">y_pred</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Add these lines to store true and predicted labels</span>
-    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
-     <span class="k">for</span> <span class="n">batch_X</span><span class="p">,</span> <span class="n">batch_y</span> <span class="ow">in</span> <span class="n">val_pbar</span><span class="p">:</span>
-        <span class="n">batch_X</span><span class="p">,</span> <span class="n">batch_y</span> <span class="o">=</span> <span class="n">batch_X</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">),</span> <span class="n">batch_y</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
-        <span class="n">outputs</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">batch_X</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
-        <span class="n">loss</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">batch_y</span><span class="p">)</span>
-        <span class="n">val_loss</span> <span class="o">+=</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
-        <span class="n">predicted</span> <span class="o">=</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
-        <span class="n">total</span> <span class="o">+=</span> <span class="n">batch_y</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">correct</span> <span class="o">+=</span> <span class="p">(</span><span class="n">predicted</span> <span class="o">==</span> <span class="n">batch_y</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
-        <span class="n">y_true</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">batch_y</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
-        <span class="n">y_pred</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">predicted</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
-        <span class="n">val_pbar</span><span class="o">.</span><span class="n">set_postfix</span><span class="p">({</span><span class="s1">&#39;loss&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">val_loss</span><span class="o">/</span><span class="p">(</span><span class="n">val_pbar</span><span class="o">.</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;acc&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">correct</span><span class="o">/</span><span class="n">total</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">})</span>
-
-    <span class="n">accuracy</span> <span class="o">=</span> <span class="n">correct</span> <span class="o">/</span> <span class="n">total</span>
-    <span class="n">roc_auc</span> <span class="o">=</span> <span class="n">calculate_roc_auc</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>  
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Epoch [</span><span class="si">{</span><span class="n">epoch</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">num_epochs</span><span class="si">}</span><span class="s1">], Train Loss: </span><span class="si">{</span><span class="n">train_loss</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">train_loader</span><span class="p">)</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">, Val Loss: </span><span class="si">{</span><span class="n">val_loss</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">val_loader</span><span class="p">)</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">, Val Accuracy: </span><span class="si">{</span><span class="n">accuracy</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">, ROC AUC: </span><span class="si">{</span><span class="n">roc_auc</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-
-<span class="c1"># 7. Evaluación final en test (sin etiquetas)</span>
-<span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
-<span class="n">test_pbar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">test_loader</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Final Evaluation (Test set)&quot;</span><span class="p">)</span>
-<span class="n">test_predictions</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
-    <span class="k">for</span> <span class="n">batch_X</span> <span class="ow">in</span> <span class="n">test_pbar</span><span class="p">:</span>
-        <span class="n">batch_X</span> <span class="o">=</span> <span class="n">batch_X</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
-        <span class="n">outputs</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">batch_X</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
-        <span class="n">predicted</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
-        <span class="n">test_predictions</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">predicted</span><span class="p">)</span>
-
-<span class="c1"># # Guardar predicciones en un archivo</span>
-<span class="c1"># df_test[&#39;predictions&#39;] = test_predictions</span>
-<span class="c1"># df_test[[&#39;id&#39;, &#39;predictions&#39;]].to_csv(&#39;test_predictions.csv&#39;, index=False)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "6915605175a3403b90863b56d9ccc6e1", "version_major": 2, "version_minor": 0}</script><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Convirtiendo SMILES de train a fingerprints...
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 200000/200000 [01:57&lt;00:00, 1700.76it/s]
-100%|██████████| 22000/22000 [00:22&lt;00:00, 979.72it/s] 
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Training on cpu
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 1/10 [Train]: 100%|██████████| 5000/5000 [04:32&lt;00:00, 18.33it/s, loss=0.0312]  
-Epoch 1/10 [Val]: 100%|██████████| 1250/1250 [00:09&lt;00:00, 136.60it/s, loss=0.0270, acc=0.9945]
-Epoch 2/10 [Train]: 100%|██████████| 5000/5000 [02:50&lt;00:00, 29.27it/s, loss=0.0232]
-Epoch 2/10 [Val]: 100%|██████████| 1250/1250 [00:07&lt;00:00, 157.09it/s, loss=0.0274, acc=0.9945]
-Epoch 3/10 [Train]: 100%|██████████| 5000/5000 [02:48&lt;00:00, 29.68it/s, loss=0.0185]
-Epoch 3/10 [Val]: 100%|██████████| 1250/1250 [00:08&lt;00:00, 141.95it/s, loss=0.0315, acc=0.9945]
-Epoch 4/10 [Train]: 100%|██████████| 5000/5000 [02:41&lt;00:00, 30.98it/s, loss=0.0132]
-Epoch 4/10 [Val]: 100%|██████████| 1250/1250 [00:08&lt;00:00, 154.51it/s, loss=0.0492, acc=0.9940]
-Epoch 5/10 [Train]: 100%|██████████| 5000/5000 [02:42&lt;00:00, 30.69it/s, loss=0.0087]
-Epoch 5/10 [Val]: 100%|██████████| 1250/1250 [00:08&lt;00:00, 155.82it/s, loss=0.0687, acc=0.9936]
-Epoch 6/10 [Train]: 100%|██████████| 5000/5000 [02:44&lt;00:00, 30.34it/s, loss=0.0055]
-Epoch 6/10 [Val]: 100%|██████████| 1250/1250 [00:08&lt;00:00, 151.29it/s, loss=0.0909, acc=0.9921]
-Epoch 7/10 [Train]: 100%|██████████| 5000/5000 [02:50&lt;00:00, 29.39it/s, loss=0.0033]
-Epoch 7/10 [Val]: 100%|██████████| 1250/1250 [00:08&lt;00:00, 139.91it/s, loss=0.1159, acc=0.9935]
-Epoch 8/10 [Train]: 100%|██████████| 5000/5000 [03:00&lt;00:00, 27.67it/s, loss=0.0024]
-Epoch 8/10 [Val]: 100%|██████████| 1250/1250 [00:08&lt;00:00, 153.79it/s, loss=0.1376, acc=0.9929]
-Epoch 9/10 [Train]: 100%|██████████| 5000/5000 [03:04&lt;00:00, 27.16it/s, loss=0.0017]
-Epoch 9/10 [Val]: 100%|██████████| 1250/1250 [00:08&lt;00:00, 153.65it/s, loss=0.1539, acc=0.9932]
-Epoch 10/10 [Train]: 100%|██████████| 5000/5000 [03:05&lt;00:00, 27.01it/s, loss=0.0021]
-Epoch 10/10 [Val]: 100%|██████████| 1250/1250 [00:08&lt;00:00, 139.28it/s, loss=0.1388, acc=0.9931]
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch [10/10], Train Loss: 0.0021, Val Loss: 0.1384, Val Accuracy: 0.9931, ROC AUC: 0.5334
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Final Evaluation (Test set): 100%|██████████| 688/688 [00:02&lt;00:00, 294.40it/s]
-</pre></div>
-</div>
-</div>
-</div>
+<p>MLP, XGBoost, LightGBM, and Random Forest, across five metrics: accuracy, precision, recall, F1-score, and AUC. Overall, XGBoost and LightGBM demonstrate superior performance, with XGBoost achieving the highest scores in most metrics. Random Forest consistently lags behind the other models. MLP’s performance varies across metrics, with its highest score in recall. While XGBoost and LightGBM show similar overall performance, XGBoost slightly outperforms LightGBM in terms of accuracy, precision, and F1-score.</p>
 </section>
 
     <script type="text/x-thebe-config">
@@ -1693,7 +1606,16 @@ Epoch 10/10 [Val]: 100%|██████████| 1250/1250 [00:08&lt;00:0
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#approach">Approach</a></li>
 </ul>
 </li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#molecules">Molecules</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#smiles-simplified-molecular-input-line-entry-system">SMILES (Simplified Molecular Input Line Entry System)</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-smiles">What is SMILES?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#smiles">SMILES</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#molecules">Molecules</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#more-in-depth-visualization-for-first-molecule">More in depth visualization for first molecule</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#d-first-molecule">3D First Molecule</a></li>
+</ul>
+</li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#modelo">Modelo</a></li>
 </ul>
 
