@@ -1,12 +1,12 @@
 ---
 
-# EDA and Machine Learning Model for Drug Discovery - 
+# EDA and Deep Learning for Drug Discovery - 
 
 ## Overview
 
-This notebook focuses on leveraging machine learning techniques for drug discovery, specifically predicting the binding affinities of small molecules to proteins. Using the **BELKA dataset** provided by Leash Biosciences, this project aims to explore a chemical space of small molecules and accelerate the identification of potential drug candidates.
+This notebook focuses on leveraging Deep learning/Machine Learning techniques for drug discovery, specifically predicting the binding affinities of small molecules to proteins. Using the **BELKA dataset** provided by Leash Biosciences, this project aims to explore a chemical space of small molecules and accelerate the identification of potential drug candidates.
 
-The dataset contains chemical and protein information, with molecular structures represented as **SMILES** strings. The primary goal is to predict whether small molecules bind to specific protein targets, assisting in the drug discovery process.
+The dataset contains chemical and protein information, representing molecular structure as **SMILES** strings. The primary goal is to predict whether small molecules bind to specific protein targets, assisting in the drug discovery process.
 
 ## Problem Definition
 
@@ -32,7 +32,7 @@ The notebook addresses a **binary classification** problem, where the target var
 
 ### 3. **Modeling**
    - **Feature Engineering**: Conversion of SMILES strings into features usable by machine learning models.
-   - **Model Training**: Application of machine learning algorithms to predict the binding affinities.
+   - **Model Training**: Application of MLP algorithm to predict the binding affinities.
    - **Evaluation**: The trained model is evaluated using metrics like accuracy, precision, and recall.
 
 ### 4. **Results and Discussion**
