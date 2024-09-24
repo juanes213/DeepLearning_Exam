@@ -54,7 +54,7 @@ Ensure you have the following libraries installed:
 
 ## Running the Notebook
 
-1. **Load the dataset**: The data is stored in a Parquet file (`train.parquet`) and (`test.parquet`). You may modify the path based on your directory structure.
+1. **Load the dataset**: The data is stored in a Parquet file (`train.parquet`) and (`test.parquet`) on this page [Visit Kaggle](https://www.kaggle.com/competitions/leash-BELKA/code). You may modify the path based on your directory structure.
 2. **Run each cell sequentially**: The notebook is designed for step-by-step execution.
 3. **Model Training**: After feature extraction, models like Random Forest, Gradient Boosting, or Neural Networks can be trained.
 
